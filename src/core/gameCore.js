@@ -12,6 +12,7 @@ function initialize(socketio, socket) {
   gameSocket.on("disconnect", onDisconnect)
   gameSocket.on("createNewGame", createNewGame)
   gameSocket.on("playerJoinGame", playerJoinGame);
+  gameSocket.on("playerMove", playerMove);
 }
 
 function onDisconnect() {
@@ -25,7 +26,6 @@ function createNewGame(data) {
     color: 'w'
   }
   users.push(user);
-  console.log('Game host:', users);
   this.join(data.gameId)
 }
 
@@ -58,6 +58,11 @@ function playerJoinGame(id) {
   } else {
     this.emit('status', 'There are already 2 players playing in this room')
   }
+}
+
+function playerMove(data) {
+  console.log(data);
+  io.to(data.gameId).emit('move', data);
 }
 
 exports.initialize = initialize;
